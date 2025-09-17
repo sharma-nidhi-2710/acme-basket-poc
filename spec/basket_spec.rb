@@ -24,9 +24,8 @@ RSpec.describe Basket do
       expect(basket.instance_variable_get(:@items).map(&:code)).to eq(["R01"])
     end
 
-    it "ignores invalid product codes" do
-      basket.add("X99")
-      expect(basket.instance_variable_get(:@items)).to be_empty
+    it "raises an error for invalid product codes" do
+      expect { basket.add("X99") }.to raise_error(Basket::InvalidProductCodeError, "Unknown product code: X99")
     end
   end
 
