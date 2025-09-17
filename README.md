@@ -29,3 +29,14 @@ bundle install
 ```bash
 rspec
 ```
+## Assumptions
+
+- Offers apply *before* delivery charges are calculated.
+- Only one offer is supported currently: Buy one Red Widget, second at half price.
+- For odd number of red widgets, the discount applies only to (count / 2).
+- Product codes passed must be strings, invalid codes raise an error.
+- Delivery rules:
+   - < $50 → $4.95
+   - ≥ $50 and < $90 → $2.95
+   - ≥ $90 → free
+- Empty basket has total of `$0.00` (or whatever behavior you define).
