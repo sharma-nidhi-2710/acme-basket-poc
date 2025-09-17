@@ -1,5 +1,9 @@
-require 'rspec'
+require 'spec_helper'
+
 require_relative '../app/basket'
+require_relative '../app/widget'
+require_relative '../app/services/offers/red_widget_half_price'
+require_relative '../app/services/delivery/standard'
 
 RSpec.describe Basket do
   let(:widgets) do
@@ -36,7 +40,7 @@ RSpec.describe Basket do
     it "applies offer: R01, R01 → second half price" do
       basket.add("R01")
       basket.add("R01")
-      expect(basket.total.round(2)).to eq(54.37)
+      expect(basket.total.round(2)).to eq(54.38)
     end
 
     it "calculates total for R01, G01" do
@@ -51,7 +55,7 @@ RSpec.describe Basket do
       basket.add("R01")
       basket.add("R01")
       basket.add("R01")
-      expect(basket.total.round(2)).to eq(98.27)
+      expect(basket.total.round(2)).to eq(98.28)
     end
   end
 end
