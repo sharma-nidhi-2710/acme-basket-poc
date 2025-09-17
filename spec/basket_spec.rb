@@ -27,6 +27,10 @@ RSpec.describe Basket do
     it "raises an error for invalid product codes" do
       expect { basket.add("X99") }.to raise_error(Basket::InvalidProductCodeError, "Unknown product code: X99")
     end
+
+    it "raises an error if the product code is not a String" do
+      expect { basket.add(123) }.to raise_error(ArgumentError, "Product code must be a String")
+    end
   end
 
   context "totals with delivery and offers" do
