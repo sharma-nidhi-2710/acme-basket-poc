@@ -1,8 +1,57 @@
-require 'spec_helper'
-require 'basket'
+require 'rspec'
+require_relative '../app/basket'
 
 RSpec.describe Basket do
-  it 'can be created' do
-    expect(Basket.new).to be_a(Basket)
+  let(:widgets) do
+    {
+      "R01" => Widget.new(code: "R01", name: "Red Widget", price: 32.95),
+      "G01" => Widget.new(code: "G01", name: "Green Widget", price: 24.95),
+      "B01" => Widget.new(code: "B01", name: "Blue Widget", price: 7.95)
+    }
+  end
+
+  let(:offers)   { [Offers::RedWidgetHalfPrice.new] }
+  let(:delivery) { Delivery::Standard.new }
+  let(:basket)   { Basket.new(widgets: widgets, offers: offers, delivery: delivery) }
+
+  context "adding widgets" do
+    it "adds a widget by code" do
+      basket.add("R01")
+      expect(basket.instance_variable_get(:@items).map(&:code)).to eq(["R01"])
+    end
+
+    it "ignores invalid product codes" do
+      basket.add("X99")
+      expect(basket.instance_variable_get(:@items)).to be_empty
+    end
+  end
+
+  context "totals with delivery and offers" do
+    it "calculates total for B01, G01" do
+      basket.add("B01")
+      basket.add("G01")
+      expect(basket.total.round(2)).to eq(37.85)
+    end
+
+    it "applies offer: R01, R01 → second half price" do
+      basket.add("R01")
+      basket.add("R01")
+      expect(basket.total.round(2)).to eq(54.37)
+    end
+
+    it "calculates total for R01, G01" do
+      basket.add("R01")
+      basket.add("G01")
+      expect(basket.total.round(2)).to eq(60.85)
+    end
+
+    it "calculates total for B01, B01, R01, R01, R01" do
+      basket.add("B01")
+      basket.add("B01")
+      basket.add("R01")
+      basket.add("R01")
+      basket.add("R01")
+      expect(basket.total.round(2)).to eq(98.27)
+    end
   end
 end
